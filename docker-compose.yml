@@ -1,0 +1,32 @@
+version: "2.4"
+
+services:
+    ipsec:
+        privileged: true
+        image: hwdsl2/ipsec-vpn-server
+        container_name: ipsec_vpn
+        restart: always
+        mem_limit: 24m
+        cpus: 0.2
+        cpu_count: 1
+        ports:
+            - "500:500/udp"
+            - "4500:4500/udp"
+        environment:
+            - VPN_USER=vpnuser
+            - VPN_PASSWORD=xxxxxxxxxxx
+            - VPN_IPSEC_PSK=xxxxxxxxxx
+
+    openvpn:
+        cap_add:
+            - 'NET_ADMIN'
+        image: kylemanna/openvpn
+        container_name: openvpn
+        ports:
+            - "1194:1194/udp"
+        restart: always
+        mem_limit: 24m
+        cpus: 0.2
+        cpu_count: 1
+        volumes:
+            - ./openvpn-data/conf:/etc/openvpn
